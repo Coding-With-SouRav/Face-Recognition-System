@@ -1,0 +1,9 @@
+opencv-python 
+numpy
+pillow
+tensorflow
+
+
+# the datasets are visible on bellow Folder
+
+# C:\Users\[UserName]\AppData\Roaming\FaceRecognitionPro\
