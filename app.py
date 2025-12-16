@@ -123,8 +123,6 @@ def train_classifier(name):
     if not files:
         messagebox.showerror("Error", "No images found in dataset.")
         return False
-    print(f"Training model for {name}...")
-    print(f"Found {len(files)} images")
     for idx, pic in enumerate(files, 1):
         imgpath = os.path.join(path, pic)
 
@@ -142,10 +140,10 @@ def train_classifier(name):
             ids.append(id_)
 
             if idx % 50 == 0:
-                print(f"Processed {idx}/{len(files)} images")
+                messagebox.showinfo("Training Progress", f"Processed {idx}/{len(files)} images")
 
         except Exception as e:
-            print(f"Error processing {pic}: {e}")
+            messagebox.showerror(f"Error processing {pic}:", e)
             continue
 
     if len(faces) == 0:
@@ -159,11 +157,10 @@ def train_classifier(name):
 
         classifier_file = os.path.join(get_classifiers_dir(), f"{name}_classifier.xml")
         clf.write(classifier_file)
-        print(f"Training complete! Model saved to {classifier_file}")
 
     except Exception as e:
         messagebox.showerror("Training Error", str(e))
-        traceback.print_exc()
+        traceback.messagebox.showerror_exc()
         return False
     return True
 
@@ -200,7 +197,7 @@ def train_classifier_with_progress(name, progress_callback=None):
                 progress_callback(progress, f"Processing image {idx}/{total_files}")
 
         except Exception as e:
-            print(f"Error processing {pic}: {e}")
+            messagebox.showerror(f"Error processing {pic}:",e)
             continue
 
     if len(faces) == 0:
@@ -256,7 +253,7 @@ def get_all_trained_users():
                 })
 
             except Exception as e:
-                print(f"Error loading classifier for {user_name}: {e}")
+                messagebox.showerror(f"Error loading classifier for {user_name}: ",e)
     return users
 
 def get_user_info():
@@ -290,7 +287,7 @@ def get_user_info():
                 })
 
             except Exception as e:
-                print(f"Error processing user {item}: {e}")
+                messagebox.showerror(f"Error processing user {item}:",e)
     users.sort(key=lambda x: x['created'], reverse=True)
     return users
 
@@ -477,7 +474,7 @@ class MainUI(tk.Tk):
             self.back_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
         main_container = tk.Frame(self, bg=COLORS["primary"])
         main_container.pack(fill="both", expand=True, padx=20, pady=20)
         header_frame = tk.Frame(main_container, bg=COLORS["primary"])
@@ -581,7 +578,7 @@ class FeatureRecognitionPage(tk.Frame):
             self.recognition_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.recognition_icon = None
         tk.Label(header_frame, text="  Advanced Recognition",
                  image=self.recognition_icon,
@@ -628,7 +625,7 @@ class FeatureRecognitionPage(tk.Frame):
             self.recog_face_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.gender_icon = None
             self.emotion_icon = None
             self.recog_face_icon = None
@@ -804,7 +801,7 @@ class FeatureRecognitionPage(tk.Frame):
                 fg=COLORS["danger"]
             )
             self.load_btn.config(state=tk.NORMAL, text="📥 Load Models", bg="#9B59B6")
-            print(f"Error loading models: {e}")
+            messagebox.showerror(f"Error loading models:",e)
 
     def start_recognition(self):
 
@@ -961,7 +958,7 @@ class FeatureRecognitionPage(tk.Frame):
                 self.recognizers.append((user_name, recognizer))
 
             except Exception as e:
-                print(f"Error loading classifier for {user_name}: {e}")
+                messagebox.showerror(f"Error loading classifier for {user_name}: ",e)
 
     def _update_frame(self):
 
@@ -1025,7 +1022,7 @@ class FeatureRecognitionPage(tk.Frame):
                     gender_age_text = f"{gender}, {age}"
 
                 except Exception as e:
-                    print("Gender/Age error:", e)
+                    messagebox.showerror("Gender/Age error:", e)
 
             if self.emotion_var.get() and self.emotion_model:
 
@@ -1048,7 +1045,7 @@ class FeatureRecognitionPage(tk.Frame):
                         emotion_color = (255, 255, 0)
 
                 except Exception as e:
-                    print("Emotion error:", e)
+                    messagebox.showerror("Emotion error:", e)
             bar_height = 22
             bar_spacing = 2
             upper_bars = []
@@ -1309,7 +1306,7 @@ class CameraFrame(tk.Frame):
                 self.recognizers.append((user_name, recognizer))
 
             except Exception as e:
-                print(f"Error loading classifier for {user_name}: {e}")
+                messagebox.showerror(f"Error loading classifier for {user_name}: ",e)
 
         if self.recognizers:
             self.info_label.config(text=f"Loaded {len(self.recognizers)} user(s)")
@@ -1547,7 +1544,7 @@ class RecognizeAllPage(tk.Frame):
                 self.stop_btn.config(state=tk.DISABLED)
 
             except Exception as e:
-                print(f"Error stopping camera: {e}")
+                messagebox.showerror(f"Error stopping camera: ",e)
 
 class StartPage(tk.Frame):
 
@@ -1646,7 +1643,7 @@ class SignupPage(tk.Frame):
             self.writing_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.writing_icon = None
         tk.Label(input_frame, image=self.writing_icon,
                  bg=COLORS["card"]).pack(side=tk.LEFT, padx=(0, 10))
@@ -1872,7 +1869,7 @@ class CapturePage(tk.Frame):
             self.capturing_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.capturing_icon = None
         tk.Label(header_frame, text="  Capture Training Data", image=self.capturing_icon,
                  compound=tk.LEFT,
@@ -1915,7 +1912,7 @@ class CapturePage(tk.Frame):
             self.cam_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.cam_icon = None
         self.count_label = tk.Label(control_panel,
                                     text="  0 / 100 images",
@@ -2310,7 +2307,7 @@ class ShowUsersPage(tk.Frame):
             self.register_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.register_icon = None
         self.title_label = tk.Label(header_frame, image=self.register_icon,
                                    compound=tk.LEFT, text=" Registered Users",
@@ -2323,7 +2320,7 @@ class ShowUsersPage(tk.Frame):
             self.refresh_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.refresh_icon = None
         self.refresh_label = tk.Label(
             header_frame,
@@ -2399,7 +2396,7 @@ class ShowUsersPage(tk.Frame):
             self.camera_icon = ImageTk.PhotoImage(img)
 
         except Exception as e:
-            print("Image Load Error:", e)
+            messagebox.showerror("Image Load Error:", e)
             self.camera_icon = None
         self.open_camera_btn = tk.Label(self.camera_control_frame,
                                        image=self.camera_icon,
@@ -2837,7 +2834,7 @@ class ShowUsersPage(tk.Frame):
                     os.makedirs(dataset_path, exist_ok=True)
 
             except Exception as e:
-                print(f"Error during cleanup: {e}")
+                messagebox.showerror(f"Error during cleanup: ",e)
                 messagebox.showwarning("Cleanup Warning",
                                     f"Some cleanup failed: {e}\nProceeding anyway...")
             self.show_camera_mode(username)
@@ -2940,7 +2937,7 @@ class ShowUsersPage(tk.Frame):
 
         except Exception as e:
             messagebox.showerror("Error", f"Failed to delete user '{username}': {e}")
-            print("delete_selected error:", e)
+            messagebox.showerror("delete_selected error:", e)
 
     def hide_refresh(self):
         self.refresh_label.pack_forget()
