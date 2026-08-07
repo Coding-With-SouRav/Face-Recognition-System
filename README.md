@@ -233,6 +233,3 @@ AppData/
 
 The application is ready for both personal use and as a foundation for more advanced face recognition projects!
 
-
-<!-- AUTO UPDATE -->
-Last maintenance: 2026-08-07 08:01 UTC
